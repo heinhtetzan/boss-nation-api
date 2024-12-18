@@ -60,7 +60,7 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        $user->profile_image = $request->profile_image;
+        $user->update(['profile_image' => $request->profile_image]);
 
         $user->update();
 

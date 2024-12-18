@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::prefix("v1")->middleware(AcceptJsonMiddleware::class)->group(function () {
+Route::prefix("v1")->group(function () {
     Route::get("/", function () {
         $response = [
             "message" => "Welcome from Boss Nation API",
