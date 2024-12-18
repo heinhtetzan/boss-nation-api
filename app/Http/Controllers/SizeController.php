@@ -91,8 +91,17 @@ class SizeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatesizeRequest $request, size $size)
+    public function update(UpdatesizeRequest $request, $id)
     {
+        $size = Size::find($id);
+
+        if (!$size) {
+            return response()->json([
+                'message' => 'Invalid Size ID'
+            ], 404);
+        }
+
+        // Update the model with the request data
           $size->update($request->only([
             'size',
             'slug' => Str::slug($request->size),
