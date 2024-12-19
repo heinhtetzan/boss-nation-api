@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('brand_name');
             $table->string('slug')->unique();
             $table->string('brand_image')->nullable();
-            $table->string('created_by');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

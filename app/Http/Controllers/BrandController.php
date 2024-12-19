@@ -35,16 +35,16 @@ class BrandController extends Controller
 
         $query->orderBy($sortBy, $sortDirection);
 
-        $products = $query->paginate($limit);
+        $brands = $query->paginate($limit);
 
-        $products->appends([
+        $brands->appends([
             'q' => $searchTerm,
             'sort_by' => $sortBy,
             'sort_direction' => $sortDirection,
             'limit' => $limit,
         ]);
 
-        return BrandResource::collection($products);
+        return BrandResource::collection($brands);
     }
 
     /**
@@ -56,7 +56,7 @@ class BrandController extends Controller
             'brand_name' => $request->brand_name,
             'slug' => Str::slug($request->brand_name),
             'brand_image' => $request->brand_image,
-            'created_by' => auth()->id()
+            'user_id' => auth()->id()
         ]);
 
         return response()->json([
