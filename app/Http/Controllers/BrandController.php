@@ -56,6 +56,7 @@ class BrandController extends Controller
             'brand_name' => $request->brand_name,
             'slug' => Str::slug($request->brand_name),
             'brand_image' => $request->brand_image,
+            'created_by' => auth()->id()
         ]);
 
         return response()->json([
