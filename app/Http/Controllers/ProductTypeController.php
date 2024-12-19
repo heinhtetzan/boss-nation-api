@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use App\Http\Requests\StoreProductTypeRequest;
+use App\Http\Requests\UpdateProductTypeRequest;
+use App\Http\Resources\ProductTypeResource;
+use App\Models\ProductType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
+
+class ProductTypeController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $searchTerm = $request->input('q');
+        $validSortColumns = ['id', 'type'];
+        $sortBy = in_array($request->input('sort_by'), $validSortColumns, true) ? $request->input('sort_by') : 'id';
+        $sortDirection = in_array($request->input('sort_direction'), ['asc', 'desc'], true) ? $request->input('sort_direction') : 'desc';
+        $limit = $request->input('limit', 5);
+
+        $limit = is_numeric($limit) && $limit > 0 && $limit <= 100 ? (int)$limit : 5;
+
+        $query = ProductType::query();
+
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('brand_name', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $query->orderBy($sortBy, $sortDirection);
+
+        $productTypes = $query->paginate($limit);
+
+        $productTypes->appends([
+            'q' => $searchTerm,
+            'sort_by' => $sortBy,
+            'sort_direction' => $sortDirection,
+            'limit' => $limit,
+        ]);
+
+        return ProductTypeResource::collection($productTypes);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreProductTypeRequest $request)
+    {
+        $productType = ProductType::create([
+            
+            'type' => $request->type,
+            'slug' => Str::slug($request->type),
+            'user_id' => auth()->id()
+        ]);
+
+        return response()->json([
+            'message' => 'Product-Type created successfully',
+            'data' => new ProductTypeResource($productType),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(ProductType $productType)
+    {
+        $validated = Validator::make(['id' => $productType->id], [
+            'id' => 'required|integer|exists:types,id',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'message' => 'Invalid Type ID'
+            ], 404);
+        }
+
+        
+
+        return response()->json([
+            'message' => 'Product-Type retrieved successfully',
+            'data' => new ProductTypeResource($productType)
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateProductTypeRequest $request, ProductType $productType)
+    {
+
+        $productType->update($request->only([
+            'type',
+            'slug' => Str::slug($request->type)
+            
+        ]));
+
+        return response()->json([
+            'message' => 'Type updated successfully',
+            'data' => new ProductTypeResource($productType)
+        ]);
+    }
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(ProductType $productType)
+    {
+        $validated = Validator::make(['id' => $productType->id], [
+            'id' => 'required|integer|exists:types,id',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'message' => 'Invalid Type ID'
+            ], 404);
+        }
+
+       
+
+        $productType->delete();
+
+        return response()->json([
+            'message' => 'Product-type deleted successfully'
+        ]);
+    }
+}
