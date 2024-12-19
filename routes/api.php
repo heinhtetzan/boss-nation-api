@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AcceptJsonMiddleware;
 use Illuminate\Http\Request;
@@ -29,5 +30,6 @@ Route::prefix("v1")->group(function () {
             Route::post('/change-name', 'changeName');
             Route::post('/change-profile-image', 'changeProfileImage');
         });
+        Route::apiResource('gallery', GalleryController::class);
     });
 });
