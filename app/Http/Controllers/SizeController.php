@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBrandRequest;
-use App\Http\Requests\UpdateBrandRequest;
-use App\Http\Resources\BrandResource;
-use App\Models\Brand;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use id;
+use App\Models\size;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Resources\SizeResource;
+use App\Http\Requests\StoresizeRequest;
+use App\Http\Requests\UpdatesizeRequest;
+use Illuminate\Support\Facades\Validator;
 
-class BrandController extends Controller
+class SizeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,50 +19,49 @@ class BrandController extends Controller
     public function index(Request $request)
     {
         $searchTerm = $request->input('q');
-        $validSortColumns = ['id', 'brand_name'];
+        $validSortColumns = ['id', 'size'];
         $sortBy = in_array($request->input('sort_by'), $validSortColumns, true) ? $request->input('sort_by') : 'id';
         $sortDirection = in_array($request->input('sort_direction'), ['asc', 'desc'], true) ? $request->input('sort_direction') : 'desc';
         $limit = $request->input('limit', 5);
 
         $limit = is_numeric($limit) && $limit > 0 && $limit <= 100 ? (int)$limit : 5;
 
-        $query = Brand::query();
+        $query = Size::query();
 
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('brand_name', 'like', '%' . $searchTerm . '%');
+                $q->where('size', 'like', '%' . $searchTerm . '%');
             });
         }
 
         $query->orderBy($sortBy, $sortDirection);
 
-        $brands = $query->paginate($limit);
+        $sizes = $query->paginate($limit);
 
-        $brands->appends([
+        $sizes->appends([
             'q' => $searchTerm,
             'sort_by' => $sortBy,
             'sort_direction' => $sortDirection,
             'limit' => $limit,
         ]);
 
-        return BrandResource::collection($brands);
+        return SizeResource::collection($sizes);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBrandRequest $request)
+    public function store(StoresizeRequest $request)
     {
-        $brand = Brand::create([
-            'brand_name' => $request->brand_name,
-            'slug' => Str::slug($request->brand_name),
-            'brand_image' => $request->brand_image,
+        $size = size::create([
+            'size' => $request->size,
+            'slug' => Str::slug($request->size),
             'user_id' => auth()->id()
         ]);
 
         return response()->json([
-            'message' => 'Brand created successfully',
-            'data' => new BrandResource($brand),
+            'message' => 'Size created successfully',
+            'data' => new SizeResource($size),
         ]);
     }
 
@@ -71,38 +71,45 @@ class BrandController extends Controller
     public function show($id)
     {
         $validated = Validator::make(['id' => $id], [
-            'id' => 'required|integer|exists:brands,id',
+            'id' => 'required|integer|exists:sizes,id',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                'message' => 'Invalid Brand ID'
+                'message' => 'Invalid Size ID'
             ], 404);
         }
 
-        $product = Brand::find($id);
+        $size = size::find($id);
 
         return response()->json([
-            'message' => 'Brand retrieved successfully',
-            'data' => new BrandResource($product)
+            'message' => 'Size retrieved successfully',
+            'data' => new SizeResource($size)
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBrandRequest $request, Brand $brand)
+    public function update(UpdatesizeRequest $request, $id)
     {
+        $size = Size::find($id);
 
-        $brand->update($request->only([
-            'brand_name',
-            'slug' => Str::slug($request->brand_name),
-            'brand_image',
+        if (!$size) {
+            return response()->json([
+                'message' => 'Invalid Size ID'
+            ], 404);
+        }
+
+        // Update the model with the request data
+          $size->update($request->only([
+            'size',
+            'slug' => Str::slug($request->size),
         ]));
 
         return response()->json([
-            'message' => 'Brand updated successfully',
-            'data' => new BrandResource($brand)
+            'message' => 'Size updated successfully',
+            'data' => new SizeResource($size)
         ]);
     }
 
@@ -112,21 +119,21 @@ class BrandController extends Controller
     public function destroy($id)
     {
         $validated = Validator::make(['id' => $id], [
-            'id' => 'required|integer|exists:brands,id',
+            'id' => 'required|integer|exists:sizes,id',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                'message' => 'Invalid Brand ID'
+                'message' => 'Invalid Size ID'
             ], 404);
         }
 
-        $product = Brand::find($id);
+        $product = size::find($id);
 
         $product->delete();
 
         return response()->json([
-            'message' => 'Brand deleted successfully'
+            'message' => 'Size deleted successfully'
         ]);
     }
 }
