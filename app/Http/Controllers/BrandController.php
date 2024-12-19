@@ -94,11 +94,11 @@ class BrandController extends Controller
     public function update(UpdateBrandRequest $request, Brand $brand)
     {
 
-        $brand->update($request->only([
-            'brand_name',
+        $brand->update([
+            'brand_name' => $request->brand_name,
             'slug' => Str::slug($request->brand_name),
-            'brand_image',
-        ]));
+            'brand_image' => $request->brand_image,
+        ]);
 
         return response()->json([
             'message' => 'Brand updated successfully',

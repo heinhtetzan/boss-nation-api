@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SizeController;
 use App\Http\Middleware\AcceptJsonMiddleware;
@@ -35,5 +36,6 @@ Route::prefix("v1")->group(function () {
         Route::apiResource('gallery', GalleryController::class);
         Route::apiResource('brand', BrandController::class);
         Route::apiResource('size', SizeController::class);
+        Route::apiResource('product-type', ProductTypeController::class);
     });
 });

@@ -55,9 +55,8 @@ class ProductTypeController extends Controller
     public function store(StoreProductTypeRequest $request)
     {
         $productType = ProductType::create([
-            
+
             'type' => $request->type,
-            'slug' => Str::slug($request->type),
             'user_id' => auth()->id()
         ]);
 
@@ -70,10 +69,10 @@ class ProductTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductType $productType)
+    public function show($id)
     {
-        $validated = Validator::make(['id' => $productType->id], [
-            'id' => 'required|integer|exists:types,id',
+        $validated = Validator::make(['id' => $id], [
+            'id' => 'required|integer|exists:product_types,id',
         ]);
 
         if ($validated->fails()) {
@@ -82,7 +81,7 @@ class ProductTypeController extends Controller
             ], 404);
         }
 
-        
+        $productType = ProductType::find($id);
 
         return response()->json([
             'message' => 'Product-Type retrieved successfully',
@@ -93,17 +92,24 @@ class ProductTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductTypeRequest $request, ProductType $productType)
+    public function update(UpdateProductTypeRequest $request, $id)
     {
 
+        $productType = ProductType::find($id);
+
+        if (!$productType) {
+            return response()->json([
+                'message' => 'Invalid Product Type ID'
+            ], 404);
+        }
+
+        // Update the model with the request data
         $productType->update($request->only([
             'type',
-            'slug' => Str::slug($request->type)
-            
         ]));
 
         return response()->json([
-            'message' => 'Type updated successfully',
+            'message' => 'Product Type updated successfully',
             'data' => new ProductTypeResource($productType)
         ]);
     }
@@ -113,21 +119,21 @@ class ProductTypeController extends Controller
     public function destroy(ProductType $productType)
     {
         $validated = Validator::make(['id' => $productType->id], [
-            'id' => 'required|integer|exists:types,id',
+            'id' => 'required|integer|exists:product_types,id',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                'message' => 'Invalid Type ID'
+                'message' => 'Invalid Product Type ID'
             ], 404);
         }
 
-       
+
 
         $productType->delete();
 
         return response()->json([
-            'message' => 'Product-type deleted successfully'
+            'message' => 'Product Type deleted successfully'
         ]);
     }
 }

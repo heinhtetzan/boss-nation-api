@@ -10,5 +10,12 @@ class ProductType extends Model
     /** @use HasFactory<\Database\Factories\ProductTypeFactory> */
     use HasFactory;
 
-    protected $fillable = ['type','slug'];
+    protected $fillable = ['type', 'user_id'];
+
+    protected $with = ['user'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

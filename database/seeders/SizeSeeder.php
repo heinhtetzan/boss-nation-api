@@ -14,16 +14,16 @@ class SizeSeeder extends Seeder
     public function run(): void
     {
         $sizes = [
-            ['size' => 'One Size'],
-            ['size' => 'UK 12'],
-            ['size' => 'UK 11.5'],
-            ['size' => 'UK 11'],
-            ['size' => 'UK 10.5'],
-            ['size' => 'UK 10'],
-            ['size' => 'UK 9.5'],
-            ['size' => 'UK 9'],
-            ['size' => 'UK 8.5'],
-            ['size' => 'UK 8'],
+            ["user_id" => 1, 'size' => 'One Size'],
+            ["user_id" => 1, 'size' => 'UK 12'],
+            ["user_id" => 1, 'size' => 'UK 11.5'],
+            ["user_id" => 1, 'size' => 'UK 11'],
+            ["user_id" => 1, 'size' => 'UK 10.5'],
+            ["user_id" => 1, 'size' => 'UK 10'],
+            ["user_id" => 1, 'size' => 'UK 9.5'],
+            ["user_id" => 1, 'size' => 'UK 9'],
+            ["user_id" => 1, 'size' => 'UK 8.5'],
+            ["user_id" => 1, 'size' => 'UK 8'],
 
         ];
         size::insert($sizes);

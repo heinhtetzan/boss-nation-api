@@ -7,8 +7,8 @@ use App\Models\size;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\SizeResource;
-use App\Http\Requests\StoresizeRequest;
-use App\Http\Requests\UpdatesizeRequest;
+use App\Http\Requests\StoreSizeRequest;
+use App\Http\Requests\UpdateSizeRequest;
 use Illuminate\Support\Facades\Validator;
 
 class SizeController extends Controller
@@ -51,11 +51,10 @@ class SizeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoresizeRequest $request)
+    public function store(StoreSizeRequest $request)
     {
         $size = size::create([
             'size' => $request->size,
-            'slug' => Str::slug($request->size),
             'user_id' => auth()->id()
         ]);
 
@@ -91,7 +90,7 @@ class SizeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatesizeRequest $request, $id)
+    public function update(UpdateSizeRequest $request, $id)
     {
         $size = Size::find($id);
 
@@ -102,9 +101,8 @@ class SizeController extends Controller
         }
 
         // Update the model with the request data
-          $size->update($request->only([
+        $size->update($request->only([
             'size',
-            'slug' => Str::slug($request->size),
         ]));
 
         return response()->json([

@@ -9,7 +9,7 @@ class size extends Model
 {
     /** @use HasFactory<\Database\Factories\SizeFactory> */
     use HasFactory;
-    protected $fillable = ['size','slug', "user_id"];
+    protected $fillable = ['size', "user_id"];
 
     protected $with = ['user'];
 
