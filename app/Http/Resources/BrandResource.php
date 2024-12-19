@@ -18,6 +18,7 @@ class BrandResource extends JsonResource
             'id' => $this->id,
             'brand_name' => $this->brand_name,
             'slug' => $this->slug,
+            'user_id' => $this->user,
             'brand_image' => $this->brand_image ? $this->brand_image : config('base.default_image'),
         ];
     }
