@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use id;
-use App\Models\size;
+use App\Models\Size;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\SizeResource;
@@ -53,7 +53,7 @@ class SizeController extends Controller
      */
     public function store(StoreSizeRequest $request)
     {
-        $size = size::create([
+        $size = Size::create([
             'size' => $request->size,
             'user_id' => auth()->id()
         ]);
@@ -79,7 +79,7 @@ class SizeController extends Controller
             ], 404);
         }
 
-        $size = size::find($id);
+        $size = Size::find($id);
 
         return response()->json([
             'message' => 'Size retrieved successfully',
@@ -126,7 +126,7 @@ class SizeController extends Controller
             ], 404);
         }
 
-        $product = size::find($id);
+        $product = Size::find($id);
 
         $product->delete();
 

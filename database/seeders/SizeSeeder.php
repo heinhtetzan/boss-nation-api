@@ -26,6 +26,6 @@ class SizeSeeder extends Seeder
             ["user_id" => 1, 'size' => 'UK 8'],
 
         ];
-        size::insert($sizes);
+        Size::insert($sizes);
     }
 }
