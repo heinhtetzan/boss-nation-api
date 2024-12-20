@@ -12,6 +12,10 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $categories = [
+            ["user_id" => 1, 'category_name' => 'Jacket', 'slug' => 'jacket'],
+            ["user_id" => 1, 'category_name' => 'T Shirt', 'slug' => 't-shirt'],
+            ["user_id" => 1, 'category_name' => 'Polo Shirt', 'slug' => 'polo-shirt'],
+        ];
     }
 }
