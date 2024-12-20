@@ -31,7 +31,7 @@ class ProductTypeController extends Controller
 
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('brand_name', 'like', '%' . $searchTerm . '%');
+                $q->where('type', 'like', '%' . $searchTerm . '%');
             });
         }
 
