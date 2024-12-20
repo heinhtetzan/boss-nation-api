@@ -14,12 +14,12 @@ class FitSeeder extends Seeder
     public function run(): void
     {
         $fits  = [
-            ["user_id" => 1, 'fit' => 'Slim'],
-            ["user_id" => 1, 'fit' => 'Regular'],
-            ["user_id" => 1, 'fit' => 'Plus Size'],
-            ["user_id" => 1, 'fit' => 'XL'],
-            ["user_id" => 1, 'fit' => '2XL'],
-            ["user_id" => 1, 'fit' => '3XL'],
+            ["user_id" => 1, 'name' => 'Slim'],
+            ["user_id" => 1, 'name' => 'Regular'],
+            ["user_id" => 1, 'name' => 'Plus Size'],
+            ["user_id" => 1, 'name' => 'XL'],
+            ["user_id" => 1, 'name' => '2XL'],
+            ["user_id" => 1, 'name' => '3XL'],
         ];
         Fit::insert($fits);
     }
