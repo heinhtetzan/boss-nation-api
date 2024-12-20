@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use id;
 use App\Models\Size;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\SizeResource;
 use App\Http\Requests\StoreSizeRequest;
