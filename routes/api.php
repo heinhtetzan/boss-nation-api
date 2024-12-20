@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProfileController;
@@ -37,5 +38,6 @@ Route::prefix("v1")->group(function () {
         Route::apiResource('brand', BrandController::class);
         Route::apiResource('size', SizeController::class);
         Route::apiResource('product-type', ProductTypeController::class);
+        Route::apiResource('product-category', CategoryController::class);
     });
 });
