@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBrandRequest;
-use App\Http\Requests\UpdateBrandRequest;
-use App\Http\Resources\BrandResource;
-use App\Models\Brand;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-class BrandController extends Controller
+
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,50 +19,50 @@ class BrandController extends Controller
     public function index(Request $request)
     {
         $searchTerm = $request->input('q');
-        $validSortColumns = ['id', 'brand_name'];
+        $validSortColumns = ['id', 'category_name'];
         $sortBy = in_array($request->input('sort_by'), $validSortColumns, true) ? $request->input('sort_by') : 'id';
         $sortDirection = in_array($request->input('sort_direction'), ['asc', 'desc'], true) ? $request->input('sort_direction') : 'desc';
         $limit = $request->input('limit', 5);
 
         $limit = is_numeric($limit) && $limit > 0 && $limit <= 100 ? (int)$limit : 5;
 
-        $query = Brand::query();
+        $query = Category::query();
 
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('brand_name', 'like', '%' . $searchTerm . '%');
+                $q->where('category_name', 'like', '%' . $searchTerm . '%');
             });
         }
 
         $query->orderBy($sortBy, $sortDirection);
 
-        $brands = $query->paginate($limit);
+        $categories = $query->paginate($limit);
 
-        $brands->appends([
+        $categories->appends([
             'q' => $searchTerm,
             'sort_by' => $sortBy,
             'sort_direction' => $sortDirection,
             'limit' => $limit,
         ]);
 
-        return BrandResource::collection($brands);
+        return CategoryResource::collection($categories);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBrandRequest $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $brand = Brand::create([
-            'brand_name' => $request->brand_name,
-            'slug' => Str::slug($request->brand_name),
-            'brand_image' => $request->brand_image,
+        $category = Category::create([
+            'category_name' => $request->category_name,
+            'slug' => Str::slug($request->category_name),
+            
             'user_id' => auth()->id()
         ]);
 
         return response()->json([
-            'message' => 'Brand created successfully',
-            'data' => new BrandResource($brand),
+            'message' => 'Category created successfully',
+            'data' => new CategoryResource($category),
         ]);
     }
 
@@ -71,39 +72,39 @@ class BrandController extends Controller
     public function show($id)
     {
         $validated = Validator::make(['id' => $id], [
-            'id' => 'required|integer|exists:brands,id',
+            'id' => 'required|integer|exists:categories,id',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                'message' => 'Invalid Brand ID'
+                'message' => 'Invalid Category ID'
             ], 404);
         }
 
-        $product = Brand::find($id);
+        $category = Category::find($id);
 
         return response()->json([
-            'message' => 'Brand retrieved successfully',
-            'data' => new BrandResource($product)
+            'message' => 'Category retrieved successfully',
+            'data' => new CategoryResource($category)
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBrandRequest $request, $id)
+    public function update(UpdateCategoryRequest $request, $id)
     {
 
-        $brand = Brand::find($id);
-        $brand->update([
-            'brand_name' => $request->brand_name,
-            'slug' => Str::slug($request->brand_name),
-            'brand_image' => $request->brand_image,
+        $category = Category::find($id);
+        $category->update([
+            'category_name' => $request->category_name,
+            'slug' => Str::slug($request->category_name)
+            
         ]);
 
         return response()->json([
-            'message' => 'Brand updated successfully',
-            'data' => new BrandResource($brand)
+            'message' => 'Category updated successfully',
+            'data' => new CategoryResource($category)
         ]);
     }
 
@@ -113,21 +114,21 @@ class BrandController extends Controller
     public function destroy($id)
     {
         $validated = Validator::make(['id' => $id], [
-            'id' => 'required|integer|exists:brands,id',
+            'id' => 'required|integer|exists:categories,id',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                'message' => 'Invalid Brand ID'
+                'message' => 'Invalid Category ID'
             ], 404);
         }
 
-        $product = Brand::find($id);
+        $category = Category::find($id);
 
-        $product->delete();
+        $category->delete();
 
         return response()->json([
-            'message' => 'Brand deleted successfully'
+            'message' => 'Category deleted successfully'
         ]);
     }
 }
