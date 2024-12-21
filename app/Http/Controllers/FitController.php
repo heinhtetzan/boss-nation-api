@@ -102,7 +102,7 @@ class FitController extends Controller
 
         // Update the model with the request data
         $fit->update($request->only([
-            'type',
+            'name',
         ]));
 
         return response()->json([
