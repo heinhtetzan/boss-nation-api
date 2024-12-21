@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::create('sliders', function (Blueprint $table) {
             $table->id();
             $table->string('mobile_image'); 
+            $table->string('desktop_image');
+            $table->foreignId('user_id');
+
+          
+            
+            $table->timestamps();
         });
     }
 
