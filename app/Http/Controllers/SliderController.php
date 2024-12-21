@@ -6,6 +6,7 @@ use App\Models\Slider;
 use App\Http\Requests\StoreSliderRequest;
 use App\Http\Requests\UpdateSliderRequest;
 use App\Http\Resources\SliderResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -14,14 +15,37 @@ class SliderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sliders = Slider::all();
+        $searchTerm = $request->input('q');
+        $validSortColumns = ['id'];
+        $sortBy = in_array($request->input('sort_by'), $validSortColumns, true) ? $request->input('sort_by') : 'id';
+        $sortDirection = in_array($request->input('sort_direction'), ['asc', 'desc'], true) ? $request->input('sort_direction') : 'desc';
+        $limit = $request->input('limit', 5);
 
-        return response()->json([
-            "data" => $sliders
+        $limit = is_numeric($limit) && $limit > 0 && $limit <= 100 ? (int)$limit : 5;
+
+        $query = Slider::query();
+
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('desktop_image', 'like', '%' . $searchTerm . '%');
+                $q->where('mobile_image', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $query->orderBy($sortBy, $sortDirection);
+
+        $sizes = $query->paginate($limit);
+
+        $sizes->appends([
+            'q' => $searchTerm,
+            'sort_by' => $sortBy,
+            'sort_direction' => $sortDirection,
+            'limit' => $limit,
         ]);
-        
+
+        return SliderResource::collection($sizes);
     }
 
     /**
@@ -70,10 +94,21 @@ class SliderController extends Controller
     public function update(UpdateSliderRequest $request, $id)
     {
 
+        $validated = Validator::make(['id' => $id], [
+            'id' => 'required|integer|exists:sliders,id',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'message' => 'Invalid Slider ID'
+            ], 404);
+        }
+
         $slider = Slider::find($id);
+        
         $slider->update([
             'desktop_image' => $request->desktop_image,
-         
+
             'mobile_image' => $request->mobile_image,
         ]);
 

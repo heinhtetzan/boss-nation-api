@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             FitSeeder::class,
             CouponSeeder::class,
-          BannerSeeder::class
+            BannerSeeder::class,
+            SliderSeeder::class,
         ]);
-
     }
 }
