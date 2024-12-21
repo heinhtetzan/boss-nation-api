@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\FitController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GalleryController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\BannerController;
 use App\Http\Middleware\AcceptJsonMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +45,7 @@ Route::prefix("v1")->group(function () {
         Route::apiResource('fitting', FitController::class);
         Route::apiResource('product-category', CategoryController::class);
         Route::apiResource('slider',SliderController::class);
+        Route::apiResource('banner', BannerController::class);
+        Route::apiResource('coupon', CouponController::class);
     });
 });
